@@ -1,20 +1,21 @@
-const axios = require('axios');
+// const axios = require('axios');
+const express = require("express"); 
 
-const router = require('express').Router();
+const Users = require("../auth/Users.Model.js"); 
+const authenticate = require("../auth/authenticate-middleware.js"); 
 
-router.get('/', (req, res) => {
-  const requestOptions = {
-    headers: { accept: 'application/json' },
-  };
+const router = express.Router()
 
-  axios
-    .get('https://icanhazdadjoke.com/search', requestOptions)
+// It's working!! 
+router.get("/", authenticate, (req, res) => { 
+    Users.find() 
     .then(response => {
-      res.status(200).json(response.data.results);
+        res.status(200).json(response)
     })
-    .catch(err => {
-      res.status(500).json({ message: 'Error Fetching Jokes', error: err });
-    });
-});
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({error: "Internal Server Error"})
+    })
+})
 
 module.exports = router;
