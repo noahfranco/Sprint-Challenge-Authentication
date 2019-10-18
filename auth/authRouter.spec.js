@@ -5,36 +5,36 @@ const request = require("supertest");
 const server = require("../api/server.js");
 
 describe("POST /register", () => {
-    it("Should return a 404 http status code if credentials don't exists", () => {
+    it("Should return a 404 http status code if credentials have internal error", () => {
         return request(server)
-        .post("/register")
+        .post("/api/auth/register")
         .then(response => {
-            expect(response.status).toBe(404)
+            expect(response.status).toBe(500)
         });
     })
 
-    // test("Should return JSON", async () => {
-    //     const response = await request(server).post("/")
-    //     expect(response.type).toMatch(/json/i); 
-    // })
+        it("checks that we can register", async () => {
+        const response = await request(server).post("/api/auth/register").send({username: "Noah"})
+        expect(response.status).toBe(500)
+    })
 });
 
 describe("POST /login", () => {
     it("Should return a 404 http status code if users does not provide credentials", () => {
         return request(server)
-        .post("/login")
+        .post("/api/auth/login")
         .then(response => {
-            expect(response.status).toBe(404)
+            expect(response.status).toBe(401)
         });
     })
 
-//     test("Should return JSON", async () => {
-//         const response = await request(server).post("/")
-//         expect(response.type).toMatch(/json/i); 
-//     })
+    it("checks that we can login", async () => {
+        const response = await request(server).post("/api/auth/login").send({username: "Noah"})
+        expect(response.status).toBe(400)
+    })
 });
 
-// })
+
 
 
 
